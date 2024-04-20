@@ -72,6 +72,8 @@ impl DatabaseManagementSystem {
                 exit(1)
             },
         }
+
+        println!("Database dumped successfully");
     }
 
     pub fn restore(&self) {
