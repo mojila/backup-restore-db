@@ -61,9 +61,7 @@ impl DatabaseManagementSystem {
                     .spawn()
                     .expect("failed to execute pg_dump");
 
-                let output = log.wait_with_output().expect("failed to wait on child");
-
-                println!("pg_dump stdout: {}", String::from_utf8_lossy(&output.stdout));
+                log.wait_with_output().expect("failed to wait on child");
             },
             "mongodump" => {
                 println!("Dumping MongoDB database");
