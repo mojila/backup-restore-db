@@ -9,19 +9,6 @@ fn main() {
 
     let selected_dbms = select_dbms();
 
-    // check dump tool is available in system using std::process::Command
-    let output = std::process::Command::new("which")
-        .arg(&selected_dbms.dump_tool)
-        .output()
-        .expect("failed to execute process");
-
-    if output.status.success() {
-        println!("{} is available in system", selected_dbms.dump_tool);
-    } else {
-        println!("{} is not available in system", selected_dbms.dump_tool);
-        println!("Please install {} and try again", selected_dbms.dump_tool);
-    }
-
     let action_list = vec!["Backup", "Restore"];
 
     let action = Select::with_theme(&ColorfulTheme::default())
@@ -35,10 +22,12 @@ fn main() {
         0 => {
             println!("You selected Backup");
             // call backup function
+            selected_dbms.dump()
         },
         1 => {
             println!("You selected Restore");
             // call restore function
+            selected_dbms.restore()
         },
         _ => println!("Invalid selection"),
     }

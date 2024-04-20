@@ -1,3 +1,5 @@
+use std::{os, process::{exit, ExitCode}};
+
 use dialoguer::{theme::ColorfulTheme, Select};
 
 pub struct DatabaseManagementSystem {
@@ -11,6 +13,30 @@ impl DatabaseManagementSystem {
             name: self.name.clone(),
             dump_tool: self.dump_tool.clone(),
         }
+    }
+
+    pub fn dump(&self) {
+        println!("Dumping database using {}", self.dump_tool);
+
+        let dump_tool = self.dump_tool.clone();
+
+        // check dump tool is available in system using std::process::Command
+        let output = std::process::Command::new("which")
+            .arg(&dump_tool)
+            .output()
+            .expect("failed to execute process");
+
+        if output.status.success() {
+            println!("{} is available in system", self.dump_tool);
+        } else {
+            println!("{} is not available in system", self.dump_tool);
+            println!("Please install {} and try again", self.dump_tool);
+            exit(1)
+        }
+    }
+
+    pub fn restore(&self) {
+        println!("Restoring database using {}", self.dump_tool);
     }
 }
 
