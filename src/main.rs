@@ -31,6 +31,7 @@ fn main() {
         println!("{} is available in system", selected_dbms.dump_tool);
     } else {
         println!("{} is not available in system", selected_dbms.dump_tool);
+        println!("Please install {} and try again", selected_dbms.dump_tool);
     }
     
     println!("Goodbye!");
