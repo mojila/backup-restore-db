@@ -2,24 +2,12 @@
 mod lib;
 
 use dialoguer::{Select, theme::ColorfulTheme};
+use lib::select_dbms;
 
 fn main() {
     println!("Welcome to Backup Restore DB CLI!");
 
-    // select using dialoguer with options from get_dbms_options()
-    let binding = lib::get_dbms_options();
-    let dbms_options = binding.iter().map(|dbms| dbms.name.as_str()).collect::<Vec<&str>>();
-
-    let selection = Select::with_theme(&ColorfulTheme::default())
-        .with_prompt("Select Database Management System")
-        .items(&dbms_options)
-        .default(0)
-        .interact()
-        .unwrap();
-
-    let selected_dbms = &binding[selection];
-
-    println!("You selected: {}", selected_dbms.name);
+    let selected_dbms = select_dbms();
 
     // check dump tool is available in system using std::process::Command
     let output = std::process::Command::new("which")
@@ -32,6 +20,27 @@ fn main() {
     } else {
         println!("{} is not available in system", selected_dbms.dump_tool);
         println!("Please install {} and try again", selected_dbms.dump_tool);
+    }
+
+    let action_list = vec!["Backup", "Restore"];
+
+    let action = Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("Select Action")
+        .items(&action_list)
+        .default(0)
+        .interact()
+        .unwrap();
+
+    match action {
+        0 => {
+            println!("You selected Backup");
+            // call backup function
+        },
+        1 => {
+            println!("You selected Restore");
+            // call restore function
+        },
+        _ => println!("Invalid selection"),
     }
     
     println!("Goodbye!");
