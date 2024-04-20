@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: your_username
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: your_database_name
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - db_backups:/var/lib/postgresql/backups
+      - db_logs:/var/lib/postgresql/logs
+    ports:
+      - 5432:5432
+
+volumes:
+  db_data:
+  db_backups:
+  db_logs:
