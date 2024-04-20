@@ -1,4 +1,4 @@
-use std::{os, process::{exit, ExitCode}};
+use std::process::exit;
 
 use dialoguer::{theme::ColorfulTheme, Select};
 
@@ -32,6 +32,47 @@ impl DatabaseManagementSystem {
             println!("{} is not available in system", self.dump_tool);
             println!("Please install {} and try again", self.dump_tool);
             exit(1)
+        }
+
+        // call dump tool
+        match dump_tool.as_str() {
+            "pg_dump" => {
+                println!("Dumping PostgreSQL database");
+
+                // set environment variable PGPASSWORD
+                std::env::set_var("PGPASSWORD", "your_password");
+
+                // call pg_dump
+                let log = std::process::Command::new("/usr/bin/pg_dump")
+                    .args(&[
+                        "--file",
+                        "/home/sandbox/Documents/backup-1.sql",
+                        "--host",
+                        "127.0.0.1",
+                        "--port",
+                        "5432",
+                        "--username",
+                        "your_username",
+                        "--verbose",
+                        "--format=c",
+                        "--blobs",
+                        "your_database_name",
+                    ])
+                    .spawn()
+                    .expect("failed to execute pg_dump");
+
+                let output = log.wait_with_output().expect("failed to wait on child");
+
+                println!("pg_dump stdout: {}", String::from_utf8_lossy(&output.stdout));
+            },
+            "mongodump" => {
+                println!("Dumping MongoDB database");
+                // call mongodump
+            },
+            _ => {
+                println!("Dump tool not supported");
+                exit(1)
+            },
         }
     }
 
